@@ -1,4 +1,4 @@
-DEBUG_FLAG = False
+DEBUG_FLAG = True
 if DEBUG_FLAG:
 	import MockSensor as w1thermsensor
 else:
@@ -6,7 +6,7 @@ else:
 import logging
 import time
 from apscheduler.schedulers.background import BackgroundScheduler
-import boto
+import boto3
 import html_generator
 
 def get_temperatures(sensor):
@@ -22,15 +22,12 @@ def check_and_log(sensor):
 	update_website(temperatures, date_string, time_string)
 
 def update_website(temperatures, date_string, time_string):
-	connection = boto.connect_s3()
-	bucket = connection.get_bucket("samuelmeyer.com")
-	key = boto.s3.key.Key(bucket)
-	key.key = "index.html"
+	#TODO use python objects instead of writing to and pushing file
 	html = html_generator.make_html(temperatures[0], time_string, date_string)
 	with open("scheduled_measurements_temporary.html", "w+") as f:
 		f.write(html)
-	# key.set_contents_from_string(html)
-	key.set_contents_from_filename("scheduled_measurements_temporary.html")
+	s3 = boto3.resource('s3').Object('samuelmeyer.com','index.html')
+	s3.put(Body=open('scheduled_measurements_temporary.html','rb'),ContentType="")
 
 
 def main():
@@ -39,7 +36,7 @@ def main():
 	sensor = w1thermsensor.W1ThermSensor()
 	scheduler = BackgroundScheduler()
 	scheduler.start()
-	interval = 300.0
+	interval = 30.0
 	scheduler.add_job(check_and_log, 'interval', seconds=interval, args=[sensor])
 	while True:
 		#TODO exception handling
