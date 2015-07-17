@@ -1,4 +1,8 @@
-import w1thermsensor
+DEBUG_FLAG = True
+if DEBUG_FLAG:
+	import MockSensor as w1thermsensor
+else:
+	import w1thermsensor
 import logging
 import time
 from apscheduler.schedulers.background import BackgroundScheduler
@@ -11,7 +15,7 @@ def check_and_log(sensor):
 	temperatures = get_temperatures(sensor)
 	date_string = time.strftime("%Y/%m/%d")
 	time_string = time.strftime("%H:%M:%S")
-	logging.info(date_string + ", " + time_string + ", " + str(temperatures[0]) + ", "
+	logging.info(" " + date_string + ", " + time_string + ", " + str(temperatures[0]) + ", "
 		     + str(temperatures[1]) + ", " + str(temperatures[2]))
 
 
