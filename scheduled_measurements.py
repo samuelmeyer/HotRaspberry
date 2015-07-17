@@ -26,7 +26,7 @@ def update_website(temperatures, date_string, time_string):
 	bucket = connection.get_bucket("samuelmeyer.com")
 	key = boto.s3.key.Key(bucket)
 	key.key = "index.html"
-	html = html_generator.make_html(temperatures[0], date_string, time_string)
+	html = html_generator.make_html(temperatures[0], time_string, date_string)
 	with open("scheduled_measurements_temporary.html", "w+") as f:
 		f.write(html)
 	# key.set_contents_from_string(html)
