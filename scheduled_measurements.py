@@ -37,6 +37,7 @@ def main():
 	logging.getLogger("boto3").setLevel(logging.WARN)
 	sensor = w1thermsensor.W1ThermSensor()
 	scheduler = BackgroundScheduler()
+	check_and_log(sensor)
 	scheduler.start()
 	interval = 180.0
 	scheduler.add_job(check_and_log, 'interval', seconds=interval, args=[sensor])
