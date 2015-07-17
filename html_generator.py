@@ -1,5 +1,8 @@
 
 base_html = """<html>
+<head>
+<title>Sam's Desk Temperature</title>
+</head>
 <body>
 <p>The last measured temperature at Sam's desk was %(temperature)0.1f degrees F at %(time)s on %(date)s.</p>
 </body>
