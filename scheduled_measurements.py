@@ -1,4 +1,4 @@
-DEBUG_FLAG = True
+DEBUG_FLAG = False
 if DEBUG_FLAG:
 	import MockSensor as w1thermsensor
 else:
@@ -33,10 +33,12 @@ def update_website(temperatures, date_string, time_string):
 def main():
 	logging.basicConfig(filename="temp.log", level=logging.INFO)
 	logging.getLogger("apscheduler").setLevel(logging.WARN)
+	logging.getLogger("botocore").setLevel(logging.WARN)
+	logging.getLogger("boto3").setLevel(logging.WARN)
 	sensor = w1thermsensor.W1ThermSensor()
 	scheduler = BackgroundScheduler()
 	scheduler.start()
-	interval = 30.0
+	interval = 180.0
 	scheduler.add_job(check_and_log, 'interval', seconds=interval, args=[sensor])
 	while True:
 		#TODO exception handling
